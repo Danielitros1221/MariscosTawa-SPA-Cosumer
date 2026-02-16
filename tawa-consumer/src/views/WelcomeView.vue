@@ -16,23 +16,23 @@ const router = useRouter();
           class="card p-8 text-left hover:brightness-95 active:scale-[0.99] transition"
           @click="router.push('/menu')"
       >
-        <div class="h-14 w-14 rounded-full bg-blue-100 dark:bg-blue-500/20 grid place-items-center mb-4">
+        <span class="h-14 w-14 rounded-full bg-blue-100 dark:bg-blue-500/20 grid place-items-center mb-4">
           <span class="text-2xl">🍽️</span>
-        </div>
+        </span>
 
-        <div class="text-xl font-bold">Comer Aquí</div>
-        <div class="text-sm text-text-muted mt-1">Disfrute en nuestras mesas</div>
+        <span class="text-xl font-bold">Comer Aquí</span>
+        <span class="text-sm text-text-muted mt-1">Disfrute en nuestras mesas</span>
       </button>
 
       <button
           class="card p-8 text-left hover:brightness-95 active:scale-[0.99] transition"
           @click="router.push('/menu')"
       >
-        <div class="h-14 w-14 rounded-full bg-rose-100 dark:bg-rose-500/20 grid place-items-center mb-4">
+        <span class="h-14 w-14 rounded-full bg-rose-100 dark:bg-rose-500/20 grid place-items-center mb-4">
           <span class="text-2xl">🛍️</span>
-        </div>
-        <div class="text-xl font-bold">Para Llevar</div>
-        <div class="text-sm text-text-muted mt-1">Listo para llevar a casa</div>
+        </span>
+        <span class="text-xl font-bold">Para Llevar</span>
+        <span class="text-sm text-text-muted mt-1">Listo para llevar a casa</span>
       </button>
     </div>
   </section>
