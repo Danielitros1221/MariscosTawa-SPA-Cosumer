@@ -1,5 +1,6 @@
 <script setup>
 import QuantityStepper from './QuantityStepper.vue'
+import { computed } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { useCurrency } from '@/composables/useCurrency'
 
@@ -24,7 +25,8 @@ function dec() {
 </script>
 
 <template>
-  <article class="rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+  <article class="rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md
+               dark:border-slate-800 dark:bg-slate-900/60 dark:hover:shadow-none">
     <div class="relative overflow-hidden rounded-t-2xl">
       <img
           v-if="product.image"
@@ -32,7 +34,7 @@ function dec() {
           :alt="product.name"
           class="h-40 w-full object-cover"
       />
-      <div v-else class="flex h-40 w-full items-center justify-center bg-slate-100 text-slate-400">
+      <div v-else class="flex h-40 w-full items-center justify-center bg-slate-100 text-slate-400  dark:bg-slate-800 dark:text-slate-400">
         Sin imagen
       </div>
 
@@ -46,11 +48,11 @@ function dec() {
 
     <div class="p-4">
       <div class="flex items-start justify-between gap-3">
-        <h3 class="text-base font-extrabold text-slate-900 leading-snug">
-          {{ product.name }}
+        <h3 class="text-base font-extrabold text-slate-900 leading-snug dark:text-slate-100">
+        {{ product.name }}
         </h3>
-        <p class="whitespace-nowrap text-base font-extrabold text-red-600">
-          {{ mxn(product.price) }}
+        <p class="mt-2 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">
+        {{ mxn(product.price) }}
         </p>
       </div>
 

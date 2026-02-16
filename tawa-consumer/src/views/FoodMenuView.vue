@@ -1,34 +1,149 @@
 <script setup>
-import { useRouter } from "vue-router";
-const router = useRouter();
+import { computed, ref } from 'vue'
+import CategoryTabs from '@/components/menu/CategoryTabs.vue'
+import NoticeBanner from '@/components/menu/NoticeBanner.vue'
+import ProductSection from '@/components/menu/ProductSection.vue'
+import CartSideBar from '@/components/cart/CartSideBar.vue'
+
+const categories = [
+  { id: 'platillos', label: 'Platillos', icon: '🍤' },
+  { id: 'bebidas', label: 'Bebidas', icon: '🥤' },
+  { id: 'caldos', label: 'Caldos', icon: '🍲' },
+]
+
+const active = ref('platillos')
+
+// Mock base (puedes ajustar ids, precios, textos)
+const products = [
+  // Platillos
+  {
+    id: 'p-coctel-camaron',
+    category: 'platillos',
+    name: 'Coctel Camarón',
+    description: 'Camarón preparado al momento. Opción: sin cebolla.',
+    price: 70,
+    image: '/mock/coctel.jpg',
+    badge: 'Popular',
+  },
+  {
+    id: 'p-marisca-tawa',
+    category: 'platillos',
+    name: 'Mariscada TAWA',
+    description: 'Pulpos encebollados, camarones enchipotlados…',
+    price: 520,
+    image: '/mock/mariscada.jpg',
+  },
+  {
+    id: 'p-pulpos-gallega',
+    category: 'platillos',
+    name: 'Pulpos a la Gallega',
+    description: 'Pulpo cocido con pimentón, aceite de oliva y sal.',
+    price: 145,
+    image: '/mock/pulpos.jpg',
+  },
+  {
+    id: 'p-camarones-empanizados',
+    category: 'platillos',
+    name: 'Camarones Empanizados',
+    description: 'Crujientes camarones rebosados con ensalada.',
+    price: 145,
+    image: '/mock/camarones.jpg',
+  },
+
+  // Caldos
+  {
+    id: 'c-caldo-camaron',
+    category: 'caldos',
+    name: 'Caldo de Camarón',
+    description: 'Tradicional caldo rojo con camarón fresco.',
+    price: 175,
+    image: '/mock/caldo.jpg',
+  },
+  {
+    id: 'c-sopa-mariscos',
+    category: 'caldos',
+    name: 'Sopa de Mariscos',
+    description: 'Selección de frutos del mar en caldo sazonado.',
+    price: 175,
+    image: '/mock/sopa.jpg',
+  },
+
+  // Bebidas
+  {
+    id: 'b-coca',
+    category: 'bebidas',
+    name: 'Coca Cola',
+    description: '355 ml',
+    price: 25,
+    image: '/mock/coca.jpg',
+  },
+  {
+    id: 'b-corona',
+    category: 'bebidas',
+    name: 'Cerveza Corona',
+    description: 'Grupo Modelo',
+    price: 35,
+    image: '/mock/corona.jpg',
+  },
+  {
+    id: 'b-clamato',
+    category: 'bebidas',
+    name: 'Clamato',
+    description: 'Bebida preparada',
+    price: 60,
+    image: '/mock/clamato.jpg',
+  },
+  {
+    id: 'b-jumex',
+    category: 'bebidas',
+    name: 'Jumex',
+    description: 'Bebida 335 ml',
+    price: 25,
+    image: '/mock/jumex.jpg',
+  },
+  {
+    id: 'b-agua',
+    category: 'bebidas',
+    name: 'Agua Embotellada',
+    description: '600 ml',
+    price: 25,
+    image: '/mock/agua.jpg',
+  },
+]
+
+const sections = computed(() => {
+  const byCat = (catId) => products.filter(p => p.category === catId)
+  if (active.value === 'platillos') return [{ title: 'Especialidades del Mar', items: byCat('platillos') }]
+  if (active.value === 'caldos') return [{ title: 'Caldos y Sopas', items: byCat('caldos') }]
+  if (active.value === 'bebidas') return [{ title: 'Bebidas', items: byCat('bebidas') }]
+  return []
+})
 </script>
 
 <template>
-  <section class="card p-6">
-    <div class="flex items-center justify-between gap-4">
-      <div>
-        <h1 class="text-xl font-extrabold">Menú</h1>
-        <p class="text-sm text-text-muted">Placeholder (Fase 0): aquí irá el menú + carrito</p>
-      </div>
+  <div class="min-h-[calc(100vh-120px)] bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div class="mx-auto w-full max-w-7xl px-4 py-6">
+      <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <!-- Main -->
+        <main class="min-w-0">
+          <div class="flex flex-col gap-4">
+            <CategoryTabs v-model="active" :categories="categories" />
+            <NoticeBanner />
+          </div>
 
-      <button class="btn-primary px-5 py-2 text-sm" @click="router.push('/summary')">
-        Ir a Resumen →
-      </button>
-    </div>
+          <div class="mt-5 space-y-10">
+            <ProductSection
+                v-for="s in sections"
+                :key="s.title"
+                :title="s.title"
+                :products="s.items"
+            />
+          </div>
+        </main>
 
-    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="card p-4 bg-muted">
-        <div class="font-semibold">Grid de productos</div>
-        <div class="text-sm text-text-muted mt-1">Cards, categorías, etc.</div>
-      </div>
-      <div class="card p-4 bg-muted">
-        <div class="font-semibold">Categorías / Tabs</div>
-        <div class="text-sm text-text-muted mt-1">Platillos, Bebidas, Caldos…</div>
-      </div>
-      <div class="card p-4 bg-muted">
-        <div class="font-semibold">Sidebar Carrito</div>
-        <div class="text-sm text-text-muted mt-1">Items + total + CTA</div>
+        <!-- Cart -->
+        <CartSideBar table-label="Mesa #4" />
       </div>
     </div>
-  </section>
+  </div>
 </template>
