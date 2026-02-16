@@ -24,7 +24,7 @@ function goSummary() {
 
       <div class="flex items-center justify-between border-b border-slate-200 px-4 py-4 dark:border-slate-800">
         <div>
-          <h3 class="text-lg font-extrabold text-slate-900">Tu Carrito</h3>
+          <h3 class="text-text text-lg font-extrabold">Tu Carrito</h3>
           <p class="text-xs text-slate-500">{{ tableLabel }}</p>
         </div>
 

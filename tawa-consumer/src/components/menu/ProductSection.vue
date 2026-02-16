@@ -10,7 +10,7 @@ defineProps({
 
 <template>
   <section class="mt-6">
-    <h2 class="text-xl font-extrabold text-slate-900">
+    <h2 class="text-xl font-extrabold text-text">
       {{ title }}
     </h2>
 
