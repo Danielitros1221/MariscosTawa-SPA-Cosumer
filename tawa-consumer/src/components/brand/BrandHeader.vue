@@ -7,7 +7,7 @@ defineProps({
 
 <template>
   <div class="flex items-center gap-3">
-    <div class="h-10 w-10 rounded-xl bg-muted border-border grid place-items-center">
+    <div class="h-10 w-10 rounded-xl bg-muted border border-border grid place-items-center">
       <span class="text-sm font-bold">🦐</span>
     </div>
 
