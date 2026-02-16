@@ -21,6 +21,7 @@ const router = useRouter();
         </span>
 
         <span class="text-xl font-bold">Comer Aquí</span>
+        <br>
         <span class="text-sm text-text-muted mt-1">Disfrute en nuestras mesas</span>
       </button>
 
@@ -32,6 +33,7 @@ const router = useRouter();
           <span class="text-2xl">🛍️</span>
         </span>
         <span class="text-xl font-bold">Para Llevar</span>
+        <br>
         <span class="text-sm text-text-muted mt-1">Listo para llevar a casa</span>
       </button>
     </div>
