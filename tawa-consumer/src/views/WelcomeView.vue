@@ -1,7 +1,14 @@
 <script setup>
 import { useRouter } from "vue-router";
+import {useOrderStore} from "@/stores/order.js";
 
 const router = useRouter();
+const order = useOrderStore();
+
+function selectType(type) {
+  order.setOrderType(type);
+  router.push("/menu");
+}
 </script>
 
 <template>
@@ -14,7 +21,7 @@ const router = useRouter();
     <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
       <button
           class="card p-8 text-left hover:brightness-95 active:scale-[0.99] transition"
-          @click="router.push('/menu')"
+          @click="selectType('dine_in')"
       >
         <span class="h-14 w-14 rounded-full bg-blue-100 dark:bg-blue-500/20 grid place-items-center mb-4">
           <span class="text-2xl">🍽️</span>
@@ -27,7 +34,7 @@ const router = useRouter();
 
       <button
           class="card p-8 text-left hover:brightness-95 active:scale-[0.99] transition"
-          @click="router.push('/menu')"
+          @click="selectType('takeaway')"
       >
         <span class="h-14 w-14 rounded-full bg-rose-100 dark:bg-rose-500/20 grid place-items-center mb-4">
           <span class="text-2xl">🛍️</span>
