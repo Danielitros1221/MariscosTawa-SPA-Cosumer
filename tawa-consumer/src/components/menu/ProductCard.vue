@@ -25,7 +25,7 @@ function dec() {
 </script>
 
 <template>
-  <article class="rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md
+  <article class="card rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md
                dark:border-slate-800 dark:bg-slate-900/60 dark:hover:shadow-none">
     <div class="relative overflow-hidden rounded-t-2xl">
       <img

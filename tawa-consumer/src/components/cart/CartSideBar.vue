@@ -20,11 +20,11 @@ function goSummary() {
 
 <template>
   <aside class="w-full lg:w-90 lg:sticky lg:top-6">
-    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+    <div class="card rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
 
       <div class="flex items-center justify-between border-b border-slate-200 px-4 py-4 dark:border-slate-800">
         <div>
-          <h3 class="text-muted text-lg font-extrabold text-slate-900">Tu Carrito</h3>
+          <h3 class="text-lg font-extrabold text-slate-900">Tu Carrito</h3>
           <p class="text-xs text-slate-500">{{ tableLabel }}</p>
         </div>
 
