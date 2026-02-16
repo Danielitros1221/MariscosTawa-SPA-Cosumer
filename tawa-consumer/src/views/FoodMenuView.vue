@@ -121,7 +121,7 @@ const sections = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-120px)] bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+  <div class=" card min-h-[calc(100vh-120px)] bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
     <div class="mx-auto w-full max-w-7xl px-4 py-6">
       <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <!-- Main -->
