@@ -38,12 +38,6 @@ function handleSelect(type) {
           </div>
         </div>
 
-        <!-- Subtitle line under brand (como prototipo) -->
-        <div class="mt-6 text-center">
-          <p class="text-xs md:text-sm tracking-[0.25em] uppercase text-text-muted">
-            Frescura y sabor al momento
-          </p>
-        </div>
 
         <!-- Question -->
         <div class="mt-14 text-center">
