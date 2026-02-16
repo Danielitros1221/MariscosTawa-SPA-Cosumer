@@ -65,7 +65,7 @@
    ----------------------------- */
 @layer base {
     html {
-        font-family: var(--font-sans);
+        font-family: var(--font-sans), sans-serif;
     }
 
     body {
