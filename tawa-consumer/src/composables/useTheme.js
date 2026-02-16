@@ -14,7 +14,7 @@ function setTheme(value) {
     applyThemeClass(value);
 }
 
-function toggleTheme(value) {
+function toggleTheme() {
     setTheme(theme.value === "dark" ? "light" : "dark");
 }
 
