@@ -22,7 +22,7 @@ const products = [
     name: 'Coctel Camarón',
     description: 'Camarón preparado al momento. Opción: sin cebolla.',
     price: 70,
-    image: '/mock/coctel.jpg',
+    image: '/mock/coctel.png',
     badge: 'Popular',
   },
   {
@@ -31,7 +31,7 @@ const products = [
     name: 'Mariscada TAWA',
     description: 'Pulpos encebollados, camarones enchipotlados…',
     price: 520,
-    image: '/mock/mariscada.jpg',
+    image: '/mock/mariscada.png',
   },
   {
     id: 'p-pulpos-gallega',
@@ -39,7 +39,7 @@ const products = [
     name: 'Pulpos a la Gallega',
     description: 'Pulpo cocido con pimentón, aceite de oliva y sal.',
     price: 145,
-    image: '/mock/pulpos.jpg',
+    image: '/mock/pulpos.png',
   },
   {
     id: 'p-camarones-empanizados',
@@ -47,7 +47,7 @@ const products = [
     name: 'Camarones Empanizados',
     description: 'Crujientes camarones rebosados con ensalada.',
     price: 145,
-    image: '/mock/camarones.jpg',
+    image: '/mock/camarones.png',
   },
 
   // Caldos
@@ -57,7 +57,7 @@ const products = [
     name: 'Caldo de Camarón',
     description: 'Tradicional caldo rojo con camarón fresco.',
     price: 175,
-    image: '/mock/caldo.jpg',
+    image: '/mock/caldo.png',
   },
   {
     id: 'c-sopa-mariscos',
@@ -65,7 +65,7 @@ const products = [
     name: 'Sopa de Mariscos',
     description: 'Selección de frutos del mar en caldo sazonado.',
     price: 175,
-    image: '/mock/sopa.jpg',
+    image: '/mock/sopa.png',
   },
 
   // Bebidas
@@ -75,7 +75,7 @@ const products = [
     name: 'Coca Cola',
     description: '355 ml',
     price: 25,
-    image: '/mock/coca.jpg',
+    image: '/mock/coca.png',
   },
   {
     id: 'b-corona',
@@ -83,7 +83,7 @@ const products = [
     name: 'Cerveza Corona',
     description: 'Grupo Modelo',
     price: 35,
-    image: '/mock/corona.jpg',
+    image: '/mock/corona.png',
   },
   {
     id: 'b-clamato',
@@ -91,7 +91,7 @@ const products = [
     name: 'Clamato',
     description: 'Bebida preparada',
     price: 60,
-    image: '/mock/clamato.jpg',
+    image: '/mock/clamato.png',
   },
   {
     id: 'b-jumex',
@@ -99,7 +99,7 @@ const products = [
     name: 'Jumex',
     description: 'Bebida 335 ml',
     price: 25,
-    image: '/mock/jumex.jpg',
+    image: '/mock/jumex.png',
   },
   {
     id: 'b-agua',
@@ -107,7 +107,7 @@ const products = [
     name: 'Agua Embotellada',
     description: '600 ml',
     price: 25,
-    image: '/mock/agua.jpg',
+    image: '/mock/agua.png',
   },
 ]
 
@@ -121,7 +121,7 @@ const sections = computed(() => {
 </script>
 
 <template>
-  <div class=" card min-h-[calc(100vh-120px)] bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+  <div class="card min-h-[calc(100vh-120px)] bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
     <div class="mx-auto w-full max-w-7xl px-4 py-6">
       <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <!-- Main -->
