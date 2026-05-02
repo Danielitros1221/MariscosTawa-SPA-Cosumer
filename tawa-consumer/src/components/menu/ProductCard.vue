@@ -25,16 +25,23 @@ function dec() {
 </script>
 
 <template>
-  <article class="card rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md
-               dark:border-slate-800 dark:bg-slate-900/60 dark:hover:shadow-none">
-    <div class="relative overflow-hidden rounded-t-2xl">
+  <article
+      class="grid h-full grid-rows-[160px_1fr_auto] overflow-hidden rounded-2xl
+         border border-slate-200 bg-white shadow-sm transition hover:shadow-md
+         dark:border-slate-800 dark:bg-slate-900/60"
+  >
+    <div class="relative overflow-hidden">
       <img
           v-if="product.image"
           :src="product.image"
           :alt="product.name"
           class="h-40 w-full object-cover"
       />
-      <div v-else class="flex h-40 w-full items-center justify-center bg-slate-100 text-slate-400  dark:bg-slate-800 dark:text-slate-400">
+      <div
+          v-else
+          class="flex h-40 w-full items-center justify-center bg-slate-100 text-slate-400
+           dark:bg-slate-800 dark:text-slate-400"
+      >
         Sin imagen
       </div>
 
@@ -42,8 +49,8 @@ function dec() {
           v-if="product.badge"
           class="absolute left-3 top-3 rounded-full bg-slate-900/70 px-3 py-1 text-xs font-semibold text-white"
       >
-        {{ product.badge }}
-      </span>
+    {{ product.badge }}
+  </span>
     </div>
 
     <div class="p-4">
@@ -60,7 +67,7 @@ function dec() {
         {{ product.description }}
       </p>
 
-      <div class="mt-4 flex items-center justify-between gap-3">
+      <div class="mt-4">
         <button
             v-if="qty === 0"
             type="button"
@@ -70,7 +77,7 @@ function dec() {
           Agregar
         </button>
 
-        <div v-else class="w-full">
+        <div v-else>
           <QuantityStepper :value="qty" @increment="inc" @decrement="dec" />
         </div>
       </div>
