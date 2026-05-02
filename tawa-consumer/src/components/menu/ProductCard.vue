@@ -3,7 +3,7 @@ import QuantityStepper from './QuantityStepper.vue'
 import { computed } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { useCurrency } from '@/composables/useCurrency'
-
+//esto es un comentario
 const props = defineProps({
   product: { type: Object, required: true }, // { id, name, description, price, image, badge? }
 })
