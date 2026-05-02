@@ -1,26 +1,25 @@
 <script setup>
-import { useRouter } from "vue-router";
-const router = useRouter();
+import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/cart'
+import { useOrderStore } from '@/stores/order'
+import OrderSuccessCard from '@/components/end/OrderSuccessCard.vue'
+
+const router = useRouter()
+const cart = useCartStore()
+const order = useOrderStore()
+
+// Guardar el total antes de limpiar
+const savedTotal = cart.total
+
+function handleFinish() {
+  cart.clear()
+  order.resetOrder()
+  router.push('/welcome')
+}
 </script>
 
 <template>
-  <section class="mx-auto max-w-xl">
-    <div class="card p-8 text-center">
-      <div class="h-14 w-14 rounded-full bg-green-100 dark:bg-green-500/20 grid place-items-center mx-auto">
-        <span class="text-2xl">✅</span>
-      </div>
-
-      <h1 class="mt-4 text-2xl font-extrabold">¡Orden Recibida!</h1>
-      <p class="mt-2 text-sm text-text-muted">Gracias por su preferencia. Su orden está siendo preparada.</p>
-
-      <div class="mt-6 border border-dashed border-border rounded-2xl py-6">
-        <div class="text-xs text-text-muted tracking-[0.2em] uppercase">Número de orden</div>
-        <div class="mt-2 text-5xl font-extrabold text-primary">#042</div>
-      </div>
-
-      <button class="btn-primary w-full mt-6 py-3 font-semibold" @click="router.push('/welcome')">
-        Finalizar →
-      </button>
-    </div>
+  <section class="flex min-h-[calc(100vh-200px)] items-center justify-center">
+    <OrderSuccessCard :total="savedTotal" @finish="handleFinish" />
   </section>
 </template>

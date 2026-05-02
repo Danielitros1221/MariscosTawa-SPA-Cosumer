@@ -15,7 +15,7 @@ function goMenu() {
 }
 
 function goPayment() {
-  router.push('/end')
+  router.push('/payment')
 }
 </script>
 
