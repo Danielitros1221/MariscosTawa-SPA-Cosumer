@@ -18,6 +18,19 @@ function handleSelect(type) {
 <template>
   <section class="relative min-h-[calc(100vh-2rem)] overflow-hidden">
 
+    <!-- Discrete employee access icon (bottom-left) -->
+    <button
+      type="button"
+      class="fixed bottom-4 left-4 z-50 h-6 w-6 opacity-[0.12] hover:opacity-[0.25]
+             transition-opacity duration-300 cursor-default"
+      aria-label="Acceso empleados"
+      @click="router.push('/kitchen/login')"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" class="h-full w-full text-text-muted">
+        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+      </svg>
+    </button>
+
     <!-- Content wrapper -->
     <div class="relative mx-auto max-w-5xl px-4 py-8">
       <!-- Main card/surface -->
