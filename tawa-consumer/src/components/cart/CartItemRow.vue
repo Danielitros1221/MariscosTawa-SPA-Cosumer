@@ -6,7 +6,7 @@ const props = defineProps({
   item: { type: Object, required: true }, // { id, name, price, image, qty, notes }
 })
 
-const emit = defineEmits(['increment', 'decrement', 'remove'])
+const emit = defineEmits(['increment', 'decrement', 'remove', 'updateNotes'])
 
 const { mxn } = useCurrency()
 </script>
@@ -44,6 +44,13 @@ const { mxn } = useCurrency()
             :value="item.qty"
             @increment="emit('increment')"
             @decrement="emit('decrement')"
+        />
+        <input
+            type="text"
+            :value="item.notes"
+            @input="emit('updateNotes', $event.target.value)"
+            placeholder="Notas: ej. sin cebolla, bien frito..."
+            class="mt-2 w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-700 outline-none transition focus:border-red-500 focus:ring-1 focus:ring-red-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:placeholder-slate-500"
         />
       </div>
     </div>

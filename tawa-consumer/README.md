@@ -1,44 +1,77 @@
-# tawa-consumer
+# Mariscos TAWA - Kiosk & Kitchen Display System (SPA)
 
-This template should help get you started developing with Vue 3 in Vite.
+This repository contains the Single Page Application (SPA) for "Mariscos TAWA", featuring both the Consumer Kiosk interface and the Kitchen Display System (KDS). It is built with Vue 3, Vite, Tailwind CSS v4, and Pinia.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Consumer Kiosk**: 
+  - Dynamic order type selection (Dine-in / Takeaway).
+  - Food menu categorization and dynamic product cart.
+  - Cart annotations for customized orders (e.g., "Sin cebolla").
+  - Payment and order summary workflows.
+- **Kitchen Display System (KDS)**:
+  - Employee login interface.
+  - Kanban-style columns (Nuevas, En Preparación, Completado).
+  - Drag-and-drop order management.
+  - Granular food preparation tracking with completion constraints.
+  - Real-time elapsed timers for order SLAs.
+- **UI/UX**:
+  - Full Dark Mode support dynamically triggered or system-based.
+  - Beautiful glassmorphism, background blobs, and smooth transitions.
+  - Fully responsive layout for varying screen sizes and orientations.
 
-## Recommended Browser Setup
+## Minimum Requirements
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+- **Node.js**: `v20.19.0` or `>=22.12.0` (LTS versions recommended).
+- **npm**: `v10.x` or higher (comes with Node.js).
+- **Modern Web Browser**: Chrome, Edge, Firefox, or Safari (versions supporting ES modules and modern CSS capabilities like `:has()` and native nesting).
 
 ## Project Setup
 
-```sh
+Clone the repository and install dependencies using npm:
+
+```bash
+# Navigate to the project directory
+cd MariscosTawa-SPA-Cosumer/tawa-consumer
+
+# Install all dependencies
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## Development and Execution
 
-```sh
+To run the application locally in a development environment with hot-module replacement:
+
+```bash
 npm run dev
 ```
 
-### Compile and Minify for Production
+The application will typically be available at `http://localhost:5173/`. 
+By default, the application will land on the consumer welcome page.
+- **Kitchen Display Access**: Click the subtle profile icon on the bottom-left of the Welcome page, or navigate directly to `/kitchen/login`.
+- **Demo Credentials**: Employee ID: `EMP-001`, Password: `tawa2026`.
 
-```sh
+## Building for Production
+
+To compile and minify the application for a production deployment:
+
+```bash
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+The compiled assets will be output to the `/dist` directory. This directory can be served via standard web servers like Nginx, Apache, or static hosting providers (Vercel, Netlify, etc.).
 
-```sh
+## Testing
+
+Run unit tests using Vitest:
+
+```bash
 npm run test:unit
 ```
+
+## Recommended IDE Setup
+
+For the best development experience, it is recommended to use:
+- **Visual Studio Code**
+- **Vue (Official) Extension** (disable Vetur if it was previously installed).
+- **Tailwind CSS IntelliSense** for utility class autocomplete.
