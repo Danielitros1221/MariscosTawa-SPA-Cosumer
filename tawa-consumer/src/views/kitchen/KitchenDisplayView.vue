@@ -46,6 +46,10 @@ function handleUndo(orderId) {
 function handleDrop({ orderId, targetStatus }) {
   ordersStore.moveToStatus(orderId, targetStatus);
 }
+
+function handleToggleItem(orderId, itemIndex) {
+  ordersStore.toggleItemCompleted(orderId, itemIndex);
+}
 </script>
 
 <template>
@@ -62,6 +66,7 @@ function handleDrop({ orderId, targetStatus }) {
         @action="handleAction"
         @undo="handleUndo"
         @drop="handleDrop"
+        @toggleItem="handleToggleItem"
       />
     </div>
   </AppShellKitchen>

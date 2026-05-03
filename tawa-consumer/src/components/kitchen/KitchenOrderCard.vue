@@ -6,7 +6,7 @@ const props = defineProps({
   status: { type: String, required: true }, // 'new' | 'preparing' | 'completed'
 });
 
-const emit = defineEmits(["action", "undo", "dragstart"]);
+const emit = defineEmits(["action", "undo", "dragstart", "toggleItem"]);
 
 /* ── Timer ── */
 const now = ref(Date.now());
@@ -152,7 +152,12 @@ function onDragStart(e) {
           <div
             v-for="(item, i) in order.items"
             :key="i"
-            class="flex items-start gap-2 text-sm"
+            class="flex items-start gap-2 text-sm transition-colors rounded-lg"
+            :class="{
+              'cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 p-2 -mx-2': status === 'preparing'
+            }"
+            @click.stop="status === 'preparing' && emit('toggleItem', i)"
+            @mousedown.stop
           >
             <!-- Completion indicator for preparing -->
             <span
