@@ -11,7 +11,7 @@ const props = defineProps({
   badgeColor: { type: String, default: "" }, // tailwind bg class for count badge
 });
 
-const emit = defineEmits(["action", "undo", "drop"]);
+const emit = defineEmits(["action", "undo", "drop", "toggleItem"]);
 
 /* ── Drag & Drop zone ── */
 const isDragOver = ref(false);
@@ -71,6 +71,7 @@ function onDrop(e) {
           :status="status"
           @action="(id) => emit('action', id)"
           @undo="(id) => emit('undo', id)"
+          @toggleItem="(itemIndex) => emit('toggleItem', order.id, itemIndex)"
         />
       </TransitionGroup>
 
