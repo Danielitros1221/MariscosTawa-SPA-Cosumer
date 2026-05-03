@@ -24,8 +24,9 @@ const elapsedLabel = computed(() => {
       : props.order.startedAt ?? props.order.createdAt;
 
   if (props.order.status === "completed" && props.order.completedAt) {
-    // Show minutes since completed
-    const mins = Math.floor((now.value - props.order.completedAt) / 60_000);
+    // Show total time from creation to completion
+    const diff = props.order.completedAt - props.order.createdAt;
+    const mins = Math.floor(diff / 60_000);
     return `${mins}m`;
   }
 
@@ -73,7 +74,16 @@ const borderColor = computed(() => {
 });
 
 /* ── Drag ── */
+const canComplete = computed(() => {
+  if (props.status !== 'preparing') return true;
+  return props.order.items.every(item => item.completed);
+});
+
 function onDragStart(e) {
+  if (props.status === 'preparing' && !canComplete.value) {
+    e.preventDefault();
+    return;
+  }
   e.dataTransfer.effectAllowed = "move";
   e.dataTransfer.setData("text/plain", props.order.id);
   emit("dragstart", props.order.id);
@@ -184,13 +194,16 @@ function onDragStart(e) {
         <!-- Action button -->
         <button
           v-if="actionConfig"
+          :disabled="status === 'preparing' && !canComplete"
           class="mt-4 w-full flex items-center justify-center gap-2 rounded-xl px-4 py-3
-                 text-sm font-bold transition-all duration-200 active:scale-[0.98]"
-          :class="
-            status === 'new'
-              ? 'bg-gray-100 text-gray-700 hover:bg-primary hover:text-white dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-primary dark:hover:text-white'
-              : actionConfig.classes
-          "
+                 text-sm font-bold transition-all duration-200"
+          :class="[
+            status === 'preparing' && !canComplete
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed dark:bg-slate-800 dark:text-slate-500'
+              : status === 'new'
+                ? 'bg-gray-100 text-gray-700 hover:bg-primary hover:text-white active:scale-[0.98] dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-primary dark:hover:text-white'
+                : actionConfig.classes + ' active:scale-[0.98]'
+          ]"
           @click="emit('action', order.id)"
         >
           <span>{{ actionConfig.icon }}</span>

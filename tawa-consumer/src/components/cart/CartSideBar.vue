@@ -54,6 +54,7 @@ function goSummary() {
               @increment="cart.increment(it.id)"
               @decrement="cart.decrement(it.id)"
               @remove="cart.remove(it.id)"
+              @updateNotes="(val) => cart.setNotes(it.id, val)"
           />
         </div>
       </div>
