@@ -10,6 +10,10 @@ const order = useOrderStore()
 const cart = useCartStore()
 const { mxn } = useCurrency()
 
+const props = defineProps({
+  loading: { type: Boolean, default: false }
+})
+
 const emit = defineEmits(['confirm'])
 
 const methods = [
@@ -98,10 +102,11 @@ function handleConfirm() {
         type="button"
         class="mt-5 w-full rounded-xl bg-red-600 px-4 py-3.5 text-sm font-extrabold text-white shadow-sm
                transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-        :disabled="!canConfirm"
+        :disabled="!canConfirm || props.loading"
         @click="handleConfirm"
     >
-      Confirmar Orden →
+      <span v-if="props.loading">Procesando...</span>
+      <span v-else>Confirmar Orden →</span>
     </button>
 
     <p v-if="!order.hasPaymentMethod" class="mt-3 text-center text-xs text-slate-400 dark:text-slate-500">

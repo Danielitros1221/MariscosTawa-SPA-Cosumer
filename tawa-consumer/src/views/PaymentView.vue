@@ -5,6 +5,8 @@ import { useCartStore } from '@/stores/cart'
 import { useOrderStore } from '@/stores/order'
 import { useCurrency } from '@/composables/useCurrency'
 import PayPanel from '@/components/summary/PayPanel.vue'
+import { createOrden, buildOrdenPayload } from '@/services'
+import { ref } from 'vue'
 
 const router = useRouter()
 const cart = useCartStore()
@@ -17,9 +19,26 @@ const orderTypeLabel = computed(() => {
   return ''
 })
 
-function handleConfirm() {
-  order.confirmOrder()
-  router.push('/end')
+const isSubmitting = ref(false)
+
+async function handleConfirm() {
+  if (isSubmitting.value) return
+  isSubmitting.value = true
+
+  try {
+    // Mesa está hardcodeada a 4 por ahora de acuerdo a FoodMenuView
+    const payload = buildOrdenPayload(cart, order, 4)
+    const newOrder = await createOrden(payload)
+    
+    // Guardar el id real que nos devolvió el backend
+    order.setOrderNumber(newOrder.id)
+    router.push('/end')
+  } catch (error) {
+    console.error('[PaymentView] Error al crear la orden:', error)
+    alert('Ocurrió un error al procesar la orden. Por favor intenta de nuevo.')
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -117,7 +136,7 @@ function handleConfirm() {
 
       <!-- Panel de métodos de pago -->
       <div class="lg:sticky lg:top-6 lg:self-start">
-        <PayPanel @confirm="handleConfirm" />
+        <PayPanel :loading="isSubmitting" @confirm="handleConfirm" />
       </div>
     </div>
   </section>

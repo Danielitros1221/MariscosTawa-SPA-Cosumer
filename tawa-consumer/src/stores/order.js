@@ -63,12 +63,10 @@ export const useOrderStore = defineStore("order", {
         },
 
         /**
-         * Genera un número de orden aleatorio de 3 dígitos (001-999)
+         * Guarda el número de orden generado por el backend
          */
-        confirmOrder() {
-            const num = Math.floor(Math.random() * 999) + 1;
-            this.orderNumber = String(num).padStart(3, "0");
-            return this.orderNumber;
+        setOrderNumber(id) {
+            this.orderNumber = String(id).padStart(3, "0");
         },
 
         resetOrder() {
