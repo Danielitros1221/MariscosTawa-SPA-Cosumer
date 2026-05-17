@@ -24,6 +24,11 @@ const products = [
     price: 70,
     image: '/mock/coctel.png',
     badge: 'Popular',
+    ingredients: [
+      { id: 1, nombre: 'Cebolla Morada' },
+      { id: 3, nombre: 'Cilantro' },
+      { id: 4, nombre: 'Limón' },
+    ],
   },
   {
     id: 'p-marisca-tawa',
@@ -32,6 +37,11 @@ const products = [
     description: 'Pulpos encebollados, camarones enchipotlados…',
     price: 520,
     image: '/mock/mariscada.png',
+    ingredients: [
+      { id: 5, nombre: 'Pulpo' },
+      { id: 6, nombre: 'Camarón' },
+      { id: 7, nombre: 'Chipotle' },
+    ],
   },
   {
     id: 'p-pulpos-gallega',
@@ -40,6 +50,11 @@ const products = [
     description: 'Pulpo cocido con pimentón, aceite de oliva y sal.',
     price: 145,
     image: '/mock/pulpos.png',
+    ingredients: [
+      { id: 5, nombre: 'Pulpo' },
+      { id: 8, nombre: 'Pimentón' },
+      { id: 9, nombre: 'Aceite de Oliva' },
+    ],
   },
   {
     id: 'p-camarones-empanizados',
@@ -48,6 +63,11 @@ const products = [
     description: 'Crujientes camarones rebosados con ensalada.',
     price: 145,
     image: '/mock/camarones.png',
+    ingredients: [
+      { id: 6, nombre: 'Camarón' },
+      { id: 10, nombre: 'Lechuga' },
+      { id: 11, nombre: 'Jitomate' },
+    ],
   },
 
   // Caldos
@@ -58,6 +78,11 @@ const products = [
     description: 'Tradicional caldo rojo con camarón fresco.',
     price: 175,
     image: '/mock/caldo.png',
+    ingredients: [
+      { id: 6, nombre: 'Camarón' },
+      { id: 12, nombre: 'Zanahoria' },
+      { id: 13, nombre: 'Papa' },
+    ],
   },
   {
     id: 'c-sopa-mariscos',
@@ -66,6 +91,11 @@ const products = [
     description: 'Selección de frutos del mar en caldo sazonado.',
     price: 175,
     image: '/mock/sopa.png',
+    ingredients: [
+      { id: 5, nombre: 'Pulpo' },
+      { id: 6, nombre: 'Camarón' },
+      { id: 14, nombre: 'Almeja' },
+    ],
   },
 
   // Bebidas
@@ -76,6 +106,7 @@ const products = [
     description: '355 ml',
     price: 25,
     image: '/mock/coca.png',
+    ingredients: [],
   },
   {
     id: 'b-corona',
@@ -84,6 +115,7 @@ const products = [
     description: 'Grupo Modelo',
     price: 35,
     image: '/mock/corona.png',
+    ingredients: [],
   },
   {
     id: 'b-clamato',
@@ -92,6 +124,7 @@ const products = [
     description: 'Bebida preparada',
     price: 60,
     image: '/mock/clamato.png',
+    ingredients: [],
   },
   {
     id: 'b-jumex',
@@ -100,6 +133,7 @@ const products = [
     description: 'Bebida 335 ml',
     price: 25,
     image: '/mock/jumex.png',
+    ingredients: [],
   },
   {
     id: 'b-agua',
@@ -108,6 +142,7 @@ const products = [
     description: '600 ml',
     price: 25,
     image: '/mock/agua.png',
+    ingredients: [],
   },
 ]
 
