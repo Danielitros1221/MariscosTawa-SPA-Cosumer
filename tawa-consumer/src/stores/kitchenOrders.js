@@ -1,137 +1,66 @@
 import { defineStore } from "pinia";
+import { getOrdenes, patchOrden } from "@/services/ordenes.service";
 
 /**
  * Kitchen Orders Store
  * Manages the 3 queues: new → preparing → completed (FIFO).
+ * Connects to the real backend API using authenticated requests.
+ *
+ * Backend status mapping:
+ *   NUEVA     → "new"
+ *   PROCESO   → "preparing"
+ *   TERMINADA → "completed"
+ *   CANCELADA → (filtered out)
  */
 
-/* ------------------------------------------------------------------ */
-/*  MOCK DATA                                                         */
-/* ------------------------------------------------------------------ */
+// ── Helpers de mapeo ──────────────────────────────────────────────────────────
 
-function minutesAgo(m) {
-  return Date.now() - m * 60_000;
+const STATUS_MAP = {
+  NUEVA:     "new",
+  PROCESO:   "preparing",
+  TERMINADA: "completed",
+};
+
+const STATUS_REVERSE = {
+  new:       "NUEVA",
+  preparing: "PROCESO",
+  completed: "TERMINADA",
+};
+
+/**
+ * Mapea una orden del backend al formato que espera KitchenOrderCard.
+ */
+function mapOrder(o) {
+  return {
+    id: String(o.id),
+    orderNumber: o.id,
+    location: o.mesa ? `Mesa ${o.mesa}` : "Para Llevar",
+    orderType: o.es_para_llevar ? "takeaway" : "dine_in",
+    status: STATUS_MAP[o.estado] ?? "new",
+    createdAt: new Date(o.created_at).getTime(),
+    startedAt: o.estado === "PROCESO" || o.estado === "TERMINADA"
+      ? new Date(o.created_at).getTime()  // El backend no expone startedAt, usamos createdAt
+      : null,
+    completedAt: o.estado === "TERMINADA"
+      ? Date.now()  // Estimado; el backend no expone completedAt aún
+      : null,
+    items: (o.detalles ?? []).map(d => ({
+      qty: d.cantidad,
+      name: d.producto_detalle?.nombre ?? `Producto #${d.producto}`,
+      notes: d.notas ?? "",
+      completed: d.preparado ?? false,
+    })),
+  };
 }
 
-const MOCK_ORDERS = [
-  // ── NUEVAS ──
-  {
-    id: "ord-104",
-    orderNumber: 104,
-    location: "Mesa 4",
-    orderType: "dine_in",
-    items: [
-      { qty: 2, name: "Cocteles de Camarón", notes: "SIN CEBOLLA" },
-      { qty: 1, name: "Pulpos a la Gallega", notes: "" },
-    ],
-    status: "new",
-    createdAt: minutesAgo(0.75),
-    startedAt: null,
-    completedAt: null,
-  },
-  {
-    id: "ord-105",
-    orderNumber: 105,
-    location: "Barra",
-    orderType: "takeaway",
-    items: [
-      { qty: 1, name: "Mariscada Tawa", notes: "" },
-      { qty: 2, name: "Coca Cola", notes: "" },
-    ],
-    status: "new",
-    createdAt: minutesAgo(2.17),
-    startedAt: null,
-    completedAt: null,
-  },
-  {
-    id: "ord-106",
-    orderNumber: 106,
-    location: "Mesa 2",
-    orderType: "dine_in",
-    items: [{ qty: 1, name: "Sopa de Mariscos", notes: "" }],
-    status: "new",
-    createdAt: minutesAgo(3),
-    startedAt: null,
-    completedAt: null,
-  },
-
-  // ── EN PREPARACIÓN ──
-  {
-    id: "ord-102",
-    orderNumber: 102,
-    location: "Mesa 8",
-    orderType: "dine_in",
-    items: [
-      { qty: 1, name: "Filete de Robalo", notes: "Bien frito", completed: false },
-      { qty: 1, name: "Camarones al Mojo de Ajo", notes: "", completed: false },
-      { qty: 1, name: "Cerveza XX Lager", notes: "", completed: true },
-    ],
-    status: "preparing",
-    createdAt: minutesAgo(8.2),
-    startedAt: minutesAgo(6),
-    completedAt: null,
-  },
-  {
-    id: "ord-103",
-    orderNumber: 103,
-    location: "Mesa 1",
-    orderType: "dine_in",
-    items: [{ qty: 1, name: "Tortas de Mariscos", notes: "", completed: false }],
-    status: "preparing",
-    createdAt: minutesAgo(4.5),
-    startedAt: minutesAgo(3),
-    completedAt: null,
-  },
-
-  // ── COMPLETADOS ──
-  {
-    id: "ord-098",
-    orderNumber: 98,
-    location: "Mesa 5",
-    orderType: "dine_in",
-    items: [
-      { qty: 1, name: "Ceviche", notes: "" },
-      { qty: 1, name: "Mojarra", notes: "" },
-    ],
-    status: "completed",
-    createdAt: minutesAgo(20),
-    startedAt: minutesAgo(18),
-    completedAt: minutesAgo(12),
-  },
-  {
-    id: "ord-099",
-    orderNumber: 99,
-    location: "UberEats #991",
-    orderType: "takeaway",
-    items: [
-      { qty: 2, name: "Camarones Empanizados", notes: "" },
-      { qty: 1, name: "Caldo de Camarón", notes: "" },
-    ],
-    status: "completed",
-    createdAt: minutesAgo(22),
-    startedAt: minutesAgo(19),
-    completedAt: minutesAgo(15),
-  },
-  {
-    id: "ord-100",
-    orderNumber: 100,
-    location: "Mesa 2",
-    orderType: "dine_in",
-    items: [{ qty: 1, name: "Orden de Hueva", notes: "" }],
-    status: "completed",
-    createdAt: minutesAgo(25),
-    startedAt: minutesAgo(23),
-    completedAt: minutesAgo(18),
-  },
-];
-
-/* ------------------------------------------------------------------ */
-/*  STORE                                                             */
-/* ------------------------------------------------------------------ */
+// ── Store ─────────────────────────────────────────────────────────────────────
 
 export const useKitchenOrdersStore = defineStore("kitchenOrders", {
   state: () => ({
-    orders: structuredClone(MOCK_ORDERS),
+    orders: [],
+    loading: false,
+    error: null,
+    _pollTimer: null,
   }),
 
   getters: {
@@ -160,80 +89,138 @@ export const useKitchenOrdersStore = defineStore("kitchenOrders", {
 
   actions: {
     _findOrder(orderId) {
-      return this.orders.find((o) => o.id === orderId);
+      return this.orders.find((o) => o.id === String(orderId));
     },
 
     /**
-     * Move order to the next status in the pipeline.
-     * new → preparing → completed
+     * Carga las órdenes desde la API.
+     * Trae NUEVA, PROCESO y TERMINADA (últimas 50).
      */
-    moveToNext(orderId) {
-      const order = this._findOrder(orderId);
-      if (!order) return;
+    async fetchOrders() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const [nuevas, proceso, terminadas] = await Promise.all([
+          getOrdenes({ estado: "NUEVA" }),
+          getOrdenes({ estado: "PROCESO" }),
+          getOrdenes({ estado: "TERMINADA" }),
+        ]);
 
-      if (order.status === "new") {
-        order.status = "preparing";
-        order.startedAt = Date.now();
-      } else if (order.status === "preparing") {
-        order.status = "completed";
-        order.completedAt = Date.now();
+        const all = [...nuevas, ...proceso, ...terminadas];
+        // Tomar solo las últimas 50 terminadas para no saturar el KDS
+        const terminadasLimitadas = terminadas.slice(0, 50);
+        this.orders = [...nuevas, ...proceso, ...terminadasLimitadas].map(mapOrder);
+      } catch (err) {
+        console.error("[kitchenOrders] Error al cargar órdenes:", err);
+        this.error = err.response?.status === 401
+          ? "Sin autorización. Inicia sesión nuevamente."
+          : "Error al cargar órdenes del servidor.";
+      } finally {
+        this.loading = false;
       }
     },
 
     /**
-     * Move order back to previous status.
-     * completed → preparing → new
+     * Inicia polling automático cada N segundos.
      */
-    moveToPrev(orderId) {
-      const order = this._findOrder(orderId);
-      if (!order) return;
+    startPolling(intervalMs = 15_000) {
+      this.fetchOrders(); // Carga inicial
+      this._pollTimer = setInterval(() => this.fetchOrders(), intervalMs);
+    },
 
-      if (order.status === "completed") {
-        order.status = "preparing";
-        order.completedAt = null;
-      } else if (order.status === "preparing") {
-        order.status = "new";
-        order.startedAt = null;
+    /**
+     * Detiene el polling.
+     */
+    stopPolling() {
+      if (this._pollTimer) {
+        clearInterval(this._pollTimer);
+        this._pollTimer = null;
       }
     },
 
     /**
-     * Directly set the status (used by drag-and-drop).
+     * Mueve la orden al siguiente estado: new → preparing → completed
      */
-    moveToStatus(orderId, newStatus) {
+    async moveToNext(orderId) {
       const order = this._findOrder(orderId);
       if (!order) return;
-      if (!["new", "preparing", "completed"].includes(newStatus)) return;
 
-      // Set timestamps based on new status
-      if (newStatus === "new") {
-        order.startedAt = null;
-        order.completedAt = null;
-      } else if (newStatus === "preparing") {
-        if (!order.startedAt) order.startedAt = Date.now();
-        order.completedAt = null;
-      } else if (newStatus === "completed") {
-        if (!order.startedAt) order.startedAt = Date.now();
-        order.completedAt = Date.now();
+      const nextStatus = order.status === "new" ? "preparing" : "completed";
+      const backendStatus = STATUS_REVERSE[nextStatus];
+
+      try {
+        await patchOrden(Number(orderId), { estado: backendStatus });
+        // Actualizar localmente mientras llega el siguiente polling
+        if (order.status === "new") {
+          order.status = "preparing";
+          order.startedAt = Date.now();
+        } else if (order.status === "preparing") {
+          order.status = "completed";
+          order.completedAt = Date.now();
+        }
+      } catch (err) {
+        console.error("[kitchenOrders] Error al actualizar orden:", err);
       }
-
-      order.status = newStatus;
     },
 
     /**
-     * Toggle individual item completion (for preparing state).
+     * Mueve la orden al estado anterior: completed → preparing → new
+     */
+    async moveToPrev(orderId) {
+      const order = this._findOrder(orderId);
+      if (!order) return;
+
+      const prevStatus = order.status === "completed" ? "preparing" : "new";
+      const backendStatus = STATUS_REVERSE[prevStatus];
+
+      try {
+        await patchOrden(Number(orderId), { estado: backendStatus });
+        if (order.status === "completed") {
+          order.status = "preparing";
+          order.completedAt = null;
+        } else if (order.status === "preparing") {
+          order.status = "new";
+          order.startedAt = null;
+        }
+      } catch (err) {
+        console.error("[kitchenOrders] Error al revertir orden:", err);
+      }
+    },
+
+    /**
+     * Asigna directamente un estado (usado por drag-and-drop).
+     */
+    async moveToStatus(orderId, newStatus) {
+      const order = this._findOrder(orderId);
+      if (!order || !STATUS_REVERSE[newStatus]) return;
+
+      try {
+        await patchOrden(Number(orderId), { estado: STATUS_REVERSE[newStatus] });
+        if (newStatus === "new") {
+          order.startedAt = null;
+          order.completedAt = null;
+        } else if (newStatus === "preparing") {
+          if (!order.startedAt) order.startedAt = Date.now();
+          order.completedAt = null;
+        } else if (newStatus === "completed") {
+          if (!order.startedAt) order.startedAt = Date.now();
+          order.completedAt = Date.now();
+        }
+        order.status = newStatus;
+      } catch (err) {
+        console.error("[kitchenOrders] Error al cambiar estado:", err);
+      }
+    },
+
+    /**
+     * Toggle local del ítem (solo UI, no llama al backend).
+     * El marcado real de preparados se haría via patchDetalleOrden().
      */
     toggleItemCompleted(orderId, itemIndex) {
       const order = this._findOrder(orderId);
       if (!order || !order.items[itemIndex]) return;
       order.items[itemIndex].completed = !order.items[itemIndex].completed;
     },
-
-    /**
-     * Reset to mock data (useful for demos).
-     */
-    resetOrders() {
-      this.orders = structuredClone(MOCK_ORDERS);
-    },
   },
 });
+

@@ -1,14 +1,5 @@
 import { defineStore } from "pinia";
-
-/**
- * Mock employee database.
- * In production this would hit the backend API.
- */
-const MOCK_EMPLOYEES = [
-  { id: "EMP-001", password: "tawa2026", name: "Chef Carlos", role: "chef" },
-  { id: "EMP-002", password: "tawa2026", name: "Chef María", role: "chef" },
-  { id: "EMP-003", password: "tawa2026", name: "Supervisor Ana", role: "supervisor" },
-];
+import { login as apiLogin, logout as apiLogout } from "@/services/auth.service";
 
 const SESSION_KEY = "tawa_kitchen_session";
 
@@ -38,7 +29,7 @@ export const useKitchenAuthStore = defineStore("kitchenAuth", {
     const saved = loadSession();
     return {
       isAuthenticated: !!saved,
-      employee: saved, // { id, name, role } | null
+      employee: saved, // { name } | null
       loginError: null,
     };
   },
@@ -50,30 +41,36 @@ export const useKitchenAuthStore = defineStore("kitchenAuth", {
 
   actions: {
     /**
-     * Attempts login with employee ID and password.
-     * @returns {boolean} true if successful
+     * Login real contra la API DRF.
+     * Usa username/password del formulario KDS.
+     * @returns {boolean} true si fue exitoso
      */
-    login(employeeId, password) {
+    async login(username, password) {
       this.loginError = null;
 
-      const trimmedId = employeeId?.trim().toUpperCase();
-      const found = MOCK_EMPLOYEES.find(
-        (e) => e.id === trimmedId && e.password === password
-      );
+      try {
+        // apiLogin() guarda el token en localStorage automáticamente
+        await apiLogin(username.trim(), password);
 
-      if (!found) {
-        this.loginError = "ID de empleado o contraseña incorrectos.";
+        // La API devuelve solo el token; guardamos el username como nombre visible
+        const employee = { name: username.trim(), role: "staff" };
+        this.employee = employee;
+        this.isAuthenticated = true;
+        saveSession(employee);
+        return true;
+      } catch (err) {
+        const status = err.response?.status;
+        if (status === 400 || status === 401) {
+          this.loginError = "Usuario o contraseña incorrectos.";
+        } else {
+          this.loginError = "Error de conexión. Verifica que el servidor esté activo.";
+        }
         return false;
       }
-
-      const employee = { id: found.id, name: found.name, role: found.role };
-      this.employee = employee;
-      this.isAuthenticated = true;
-      saveSession(employee);
-      return true;
     },
 
     logout() {
+      apiLogout(); // Limpia el token del localStorage
       this.isAuthenticated = false;
       this.employee = null;
       this.loginError = null;
@@ -81,3 +78,4 @@ export const useKitchenAuthStore = defineStore("kitchenAuth", {
     },
   },
 });
+

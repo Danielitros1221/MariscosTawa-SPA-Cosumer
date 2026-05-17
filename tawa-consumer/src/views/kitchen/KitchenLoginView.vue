@@ -12,13 +12,8 @@ const isLoading = ref(false);
 
 async function handleLogin() {
   isLoading.value = true;
-
-  // Simulate network latency
-  await new Promise((r) => setTimeout(r, 600));
-
-  const ok = auth.login(employeeId.value, password.value);
+  const ok = await auth.login(employeeId.value, password.value);
   isLoading.value = false;
-
   if (ok) {
     router.push("/kitchen/display");
   }

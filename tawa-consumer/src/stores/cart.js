@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-const STORAGE_KEY = 'tawa_cart_v1'
+const STORAGE_KEY = 'tawa_cart_v2'
 
 function loadCart() {
     try {

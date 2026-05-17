@@ -1,6 +1,7 @@
 <script setup>
 import QuantityStepper from '@/components/menu/QuantityStepper.vue'
 import { useCurrency } from '@/composables/useCurrency'
+import { resolveProductImage } from '@/utils/productImages'
 
 const props = defineProps({
   item: { type: Object, required: true }, // { id, name, price, image, qty, notes, ingredients? }
@@ -9,6 +10,9 @@ const props = defineProps({
 const emit = defineEmits(['increment', 'decrement', 'remove'])
 
 const { mxn } = useCurrency()
+
+// Resolver imagen: usa la del item o busca localmente por nombre
+const resolvedImage = (item) => resolveProductImage(item.image, item.name)
 </script>
 
 <template>
@@ -18,8 +22,8 @@ const { mxn } = useCurrency()
   >
     <!-- Imagen -->
     <img
-        v-if="item.image"
-        :src="item.image"
+        v-if="resolvedImage(item)"
+        :src="resolvedImage(item)"
         :alt="item.name"
         class="h-16 w-16 shrink-0 rounded-xl object-cover"
     />
