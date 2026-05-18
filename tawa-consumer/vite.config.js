@@ -11,11 +11,19 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     tailwindcss(),
-
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
+    },
+  },
+  server: {
+    proxy: {
+      // Reenvía todas las peticiones /api/* al backend Django
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
     },
   },
 })

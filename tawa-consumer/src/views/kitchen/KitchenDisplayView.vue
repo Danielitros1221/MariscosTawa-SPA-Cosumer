@@ -1,9 +1,14 @@
 <script setup>
+import { onMounted, onUnmounted } from "vue";
 import { useKitchenOrdersStore } from "@/stores/kitchenOrders.js";
 import KitchenColumn from "@/components/kitchen/KitchenColumn.vue";
 import AppShellKitchen from "@/layouts/AppShellKitchen.vue";
 
 const ordersStore = useKitchenOrdersStore();
+
+/* ── Auto-refresh ── */
+onMounted(() => ordersStore.startPolling(15_000));
+onUnmounted(() => ordersStore.stopPolling());
 
 /* ── Column definitions ── */
 const columns = [

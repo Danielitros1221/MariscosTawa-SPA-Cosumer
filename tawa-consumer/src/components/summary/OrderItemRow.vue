@@ -1,14 +1,18 @@
 <script setup>
 import QuantityStepper from '@/components/menu/QuantityStepper.vue'
 import { useCurrency } from '@/composables/useCurrency'
+import { resolveProductImage } from '@/utils/productImages'
 
 const props = defineProps({
-  item: { type: Object, required: true }, // { id, name, price, image, qty, notes }
+  item: { type: Object, required: true }, // { id, name, price, image, qty, notes, ingredients? }
 })
 
 const emit = defineEmits(['increment', 'decrement', 'remove'])
 
 const { mxn } = useCurrency()
+
+// Resolver imagen: usa la del item o busca localmente por nombre
+const resolvedImage = (item) => resolveProductImage(item.image, item.name)
 </script>
 
 <template>
@@ -18,8 +22,8 @@ const { mxn } = useCurrency()
   >
     <!-- Imagen -->
     <img
-        v-if="item.image"
-        :src="item.image"
+        v-if="resolvedImage(item)"
+        :src="resolvedImage(item)"
         :alt="item.name"
         class="h-16 w-16 shrink-0 rounded-xl object-cover"
     />
@@ -41,6 +45,22 @@ const { mxn } = useCurrency()
           <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
             {{ mxn(item.price) }} c/u
           </p>
+
+          <!-- Lista de ingredientes -->
+          <div
+              v-if="item.ingredients && item.ingredients.length"
+              class="mt-1.5 flex flex-wrap gap-1"
+          >
+            <span
+                v-for="ing in item.ingredients"
+                :key="ing.id"
+                class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50
+                       px-2 py-0.5 text-[10px] font-medium text-slate-500
+                       dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-400"
+            >
+              {{ ing.nombre }}
+            </span>
+          </div>
         </div>
 
         <button
@@ -70,4 +90,4 @@ const { mxn } = useCurrency()
       </div>
     </div>
   </div>
-</template>
+</template>

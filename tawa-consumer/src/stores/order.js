@@ -17,6 +17,11 @@ export const useOrderStore = defineStore("order", {
          * Número de orden generado al confirmar (ej. "047")
          */
         orderNumber: null,
+
+        /**
+         * Porcentaje de propina: 0 | 10 | 15 | 20
+         */
+        tipPercent: 0,
     }),
 
     getters: {
@@ -50,18 +55,25 @@ export const useOrderStore = defineStore("order", {
         },
 
         /**
-         * Genera un número de orden aleatorio de 3 dígitos (001-999)
+         * Establece el porcentaje de propina (0, 10, 15, 20)
          */
-        confirmOrder() {
-            const num = Math.floor(Math.random() * 999) + 1;
-            this.orderNumber = String(num).padStart(3, "0");
-            return this.orderNumber;
+        setTip(percent) {
+            const allowed = [0, 10, 15, 20];
+            this.tipPercent = allowed.includes(percent) ? percent : 0;
+        },
+
+        /**
+         * Guarda el número de orden generado por el backend
+         */
+        setOrderNumber(id) {
+            this.orderNumber = String(id).padStart(3, "0");
         },
 
         resetOrder() {
             this.orderType = null;
             this.paymentMethod = null;
             this.orderNumber = null;
+            this.tipPercent = 0;
         },
     },
 });

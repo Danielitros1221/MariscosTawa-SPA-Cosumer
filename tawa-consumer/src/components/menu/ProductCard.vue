@@ -3,6 +3,7 @@ import QuantityStepper from './QuantityStepper.vue'
 import { computed } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { useCurrency } from '@/composables/useCurrency'
+import { resolveProductImage } from '@/utils/productImages'
 
 const props = defineProps({
   product: { type: Object, required: true }, // { id, name, description, price, image, badge? }
@@ -12,6 +13,7 @@ const cart = useCartStore()
 const { mxn } = useCurrency()
 
 const qty = computed(() => cart.getQtyById(props.product.id))
+const productImage = computed(() => resolveProductImage(props.product.image, props.product.name))
 
 function addOne() {
   cart.addItem(props.product)
@@ -34,8 +36,8 @@ function dec() {
     <!-- Imagen -->
     <div class="relative h-40 overflow-hidden">
       <img
-          v-if="product.image"
-          :src="product.image"
+          v-if="productImage"
+          :src="productImage"
           :alt="product.name"
           class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
       />

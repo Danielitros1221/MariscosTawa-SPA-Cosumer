@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-const STORAGE_KEY = 'tawa_cart_v1'
+const STORAGE_KEY = 'tawa_cart_v2'
 
 function loadCart() {
     try {
@@ -21,7 +21,7 @@ function saveCart(items) {
 
 export const useCartStore = defineStore('cart', {
     state: () => ({
-        items: loadCart(), // [{ id, name, price, image, qty, notes? }]
+        items: loadCart(), // [{ id, name, price, image, qty, notes?, ingredients? }]
     }),
 
     getters: {
@@ -51,6 +51,7 @@ export const useCartStore = defineStore('cart', {
                     image: product.image ?? null,
                     qty: 1,
                     notes: '',
+                    ingredients: product.ingredients ?? null,
                 })
             }
             this._commit()
